@@ -1079,7 +1079,7 @@ function ProjectInfoPanel({ isOpen, onToggle, onClose }) {
           </div>
           <div className="project-info__section">
             <span className="project-info__label">Автор</span>
-            <strong>Пушкин Алексей Сергеевич</strong>
+            <strong>Рыболова Дарья Денисовна</strong>
           </div>
         </div>
       )}
