@@ -1028,13 +1028,73 @@ function OrganelleNavigator({
   );
 }
 
+function ProjectInfoPanel({ isOpen, onToggle, onClose }) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  return (
+    <aside className="project-info" aria-label="Информация о проекте">
+      <button
+        className="project-info__trigger"
+        type="button"
+        onClick={onToggle}
+        aria-label="О проекте"
+        aria-expanded={isOpen}
+      >
+        i
+      </button>
+
+      {isOpen && (
+        <div className="project-info__panel" role="dialog" aria-modal="false">
+          <div className="project-info__header">
+            <h2>О проекте</h2>
+            <button
+              className="project-info__close"
+              type="button"
+              onClick={onClose}
+              aria-label="Закрыть информацию о проекте"
+            >
+              ×
+            </button>
+          </div>
+          <p className="project-info__text">
+            Разработка выполнена в рамках научно-интеллектуального конкурса
+            «БиоВижн (BioVision)».
+          </p>
+          <div className="project-info__section">
+            <span className="project-info__label">Проект</span>
+            <strong>
+              «Мини-атлас клеток и моделирование клеточных структур с помощью ИИ»
+            </strong>
+          </div>
+          <div className="project-info__section">
+            <span className="project-info__label">Автор</span>
+            <strong>Пушкин Алексей Сергеевич</strong>
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
+
 export default function App() {
-  const [file] = useState("/animal_cell.glb");
+  const [file] = useState("./animal_cell.glb");
   const [sceneRoot, setSceneRoot] = useState(null);
   const [meshList, setMeshList] = useState([]);
   const [hovered, setHovered] = useState(null);
   const [selected, setSelected] = useState(null);
   const [autoRotate, setAutoRotate] = useState(false);
+  const [isProjectInfoOpen, setIsProjectInfoOpen] = useState(false);
   const [cinematicTrigger, setCinematicTrigger] = useState(0);
   const [overviewTrigger, setOverviewTrigger] = useState(0);
   const controlsRef = useRef(null);
@@ -1139,6 +1199,11 @@ export default function App() {
             Автовращение: {autoRotate ? "вкл" : "выкл"}
           </button>
         </div>
+        <ProjectInfoPanel
+          isOpen={isProjectInfoOpen}
+          onToggle={() => setIsProjectInfoOpen((value) => !value)}
+          onClose={() => setIsProjectInfoOpen(false)}
+        />
         <Scene
           file={file}
           sceneRoot={sceneRoot}
